@@ -1,25 +1,31 @@
-import sys
+import time
 import argparse
 import adafruit_dht
 import board
 
 def run(args):
-    temperature = 0
-    humidity = 0
-    try:
-        temperature, humidity = check_weather(args)
-    except RuntimeError as error:
-        print(error.args[0])
-        temperature, humidity = check_weather(args) 
-    if args.runner == 'gcp':
-        post_on_pubsub(args, temperature, humidity)
+    temperature, humidity = check_weather(args)
+    if temperature:
+        if args.runner == 'gcp':
+            post_on_pubsub(args, temperature, humidity)
+        else:
+            print('Temperature: {:.1f} - Humidity: {:.1f}'.format(temperature, humidity))
     else:
-        print('Temperature: {:.1f} - Humidity: {:.1f}'.format(temperature, humidity))
+        raise RuntimeError('Fail to get temperature')
 
 def check_weather(args):
     dhtDevice = adafruit_dht.DHT22(board.D4, use_pulseio=False)
-    temperature = dhtDevice.temperature
-    humidity = dhtDevice.humidity
+    temperature = None
+    humidity = None
+    tries = 0
+    while temperature == None and tries < 10:
+        try:
+            humidity = dhtDevice.humidity
+            temperature = dhtDevice.temperature
+        except RuntimeError as error:
+            print(error.args[0])
+            tries += 1
+            time.sleep(3.0)
     return temperature, humidity
 
 def post_on_pubsub(args, temperature, humidity):
