@@ -7,6 +7,8 @@ import adafruit_dht
 import board
 from google.cloud import pubsub_v1
 
+FORMAT = '%(asctime)s %(clientip)-15s %(user)-8s %(message)s'
+
 def run(args):
     temperature, humidity = check_weather(args)
     if temperature:
@@ -44,7 +46,7 @@ def post_on_pubsub(args, temperature, humidity):
     logging.info(f'published message id {future.result()}')
 
 if __name__ == '__main__':
-    logging.basicConfig(filename='logs/output.log', encoding='utf-8', level=logging.INFO)
+    logging.basicConfig(filename='logs/output.log', encoding='utf-8', level=logging.INFO, format=FORMAT)
     logging.info('Starting check weather...')
     parser = argparse.ArgumentParser()
     parser.add_argument(
