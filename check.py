@@ -46,8 +46,6 @@ def post_on_pubsub(args, temperature, humidity):
     logging.info(f'published message id {future.result()}')
 
 if __name__ == '__main__':
-    logging.basicConfig(filename='logs/output.log', encoding='utf-8', level=logging.INFO, format=FORMAT)
-    logging.info('Starting check weather...')
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '--runner',
@@ -64,8 +62,16 @@ if __name__ == '__main__':
         dest='topic_id',
         default=None
     )
+    parser.add_argument(
+        '--output',
+        dest='output',
+        default='output.log'
+    )
 
     args = parser.parse_args()
+    logging.basicConfig(filename=args.output, encoding='utf-8', level=logging.INFO, format=FORMAT)
+    logging.info('Starting check weather...')
+
     logging.debug(args)
     run(args)
     logging.info('Check weather finished!')
