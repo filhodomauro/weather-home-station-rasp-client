@@ -40,7 +40,7 @@ def post_on_pubsub(args, temperature, humidity):
     data = json.dumps({
         'temperature': temperature,
         'humidity': humidity,
-        'local_datetime': datetime.datetime.now().isoformat()
+        'local_datetime': datetime.datetime.utcnow().isoformat()
     }).encode('utf-8')
     future = publisher.publish(topic_path, data)
     logging.info(f'published message id {future.result()}')
