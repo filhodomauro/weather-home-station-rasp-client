@@ -1,1 +1,2 @@
 adafruit-circuitpython-dht
+google-cloud-pubsub

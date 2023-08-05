@@ -1,7 +1,10 @@
 import time
+import datetime
+import json
 import argparse
 import adafruit_dht
 import board
+from google.cloud import pubsub_v1
 
 def run(args):
     temperature, humidity = check_weather(args)
@@ -29,7 +32,15 @@ def check_weather(args):
     return temperature, humidity
 
 def post_on_pubsub(args, temperature, humidity):
-    pass
+    publisher = pubsub_v1.PublisherClient()
+    topic_path = publisher.topic_path(args.project_id, args.topic_id)
+    data = json.dumps({
+        'temperature': temperature,
+        'humidity': humidity,
+        'local_datetime': datetime.datetime.now().isoformat()
+    }).encode('utf-8')
+    future = publisher.publish(topic_path, data)
+    print(f'published message id {future.result()}')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -37,6 +48,16 @@ if __name__ == '__main__':
         '--runner',
         dest='runner',
         default='local'
+    )
+    parser.add_argument(
+        'project_id',
+        dest='project_id',
+        default=None
+    )
+    parser.add_argument(
+        'topic_id',
+        dest='topic_id',
+        default=None
     )
     args = parser.parse_args()
     print(args)
