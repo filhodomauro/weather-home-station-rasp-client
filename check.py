@@ -50,12 +50,12 @@ if __name__ == '__main__':
         default='local'
     )
     parser.add_argument(
-        'project_id',
+        '--project_id',
         dest='project_id',
         default=None
     )
     parser.add_argument(
-        'topic_id',
+        '--topic_id',
         dest='topic_id',
         default=None
     )
