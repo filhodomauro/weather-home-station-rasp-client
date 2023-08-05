@@ -4,7 +4,6 @@ import adafruit_dht
 import board
 
 def run(args):
-    dhtDevice = adafruit_dht.DHT22(board.D4, use_pulseio=False)
     temperature = 0
     humidity = 0
     try:
@@ -18,6 +17,7 @@ def run(args):
         print('Temperature: {:.1f} - Humidity: {:.1f}'.format(temperature, humidity))
 
 def check_weather(args):
+    dhtDevice = adafruit_dht.DHT22(board.D4, use_pulseio=False)
     temperature = dhtDevice.temperature
     humidity = dhtDevice.humidity
     return temperature, humidity
