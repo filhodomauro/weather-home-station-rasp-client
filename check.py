@@ -21,6 +21,7 @@ def run(args):
 def check_weather(args):
     temperature = dhtDevice.temperature
     humidity = dhtDevice.humidity
+    return temperature, humidity
 
 def post_on_pubsub(args, temperature, humidity):
     pass
