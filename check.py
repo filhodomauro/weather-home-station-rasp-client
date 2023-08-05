@@ -7,7 +7,7 @@ import adafruit_dht
 import board
 from google.cloud import pubsub_v1
 
-FORMAT = '%(asctime)s - %(message)s'
+FORMAT = '%(asctime)s - %(levelname)s:%(message)s'
 
 def run(args):
     temperature, humidity = check_weather(args)
