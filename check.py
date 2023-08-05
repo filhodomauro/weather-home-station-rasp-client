@@ -3,9 +3,8 @@ import argparse
 import adafruit_dht
 import board
 
-dhtDevice = adafruit_dht.DHT22(board.D4, use_pulseio=False)
-
 def run(args):
+    dhtDevice = adafruit_dht.DHT22(board.D4, use_pulseio=False)
     temperature = 0
     humidity = 0
     try:
@@ -16,7 +15,7 @@ def run(args):
     if args.runner == 'gcp':
         post_on_pubsub(args, temperature, humidity)
     else:
-        print('Temperature: {temperature} - Humidity: {humidity}')
+        print('Temperature: {:.1f} - Humidity: {:.1f}'.format(temperature, humidity))
 
 def check_weather(args):
     temperature = dhtDevice.temperature
